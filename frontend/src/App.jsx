@@ -1,23 +1,24 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Signup from "./features/auth/components/Signup";
+
 import Login from "./features/auth/components/Login";
-import User from "./features/auth/components/User";
+import Signup from "./features/auth/components/Signup";
 import ProtectedRoute from "./features/auth/components/ProtectedRoute";
 
+import Dashboard from "./features/auth/pages/Dashboard";
 import Chat from "./features/auth/pages/Chat";
 import Resume from "./features/auth/pages/Resume";
-import Dashboard from "./features/auth/pages/Dashboard";
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* PUBLIC ROUTES */}
+        {/* 🔓 PUBLIC */}
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* PROTECTED ROUTES */}
+        {/* 🔐 PROTECTED */}
         <Route
           path="/dashboard"
           element={
@@ -44,8 +45,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-       
 
       </Routes>
     </BrowserRouter>
