@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { signupUser } from "../services/api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [name,setName] = useState("");
   const [email,setEmail] = useState("");
   const [password,setPassword] = useState("");
+
+  const navigate = useNavigate(); // ✅ add this
 
   const handleSignup = async (e)=>{
     e.preventDefault();
@@ -18,7 +20,14 @@ const Signup = () => {
       });
 
       console.log(res.data);
+
+      // ✅ store token (important for ProtectedRoute)
+      localStorage.setItem("token", res.data.token || "dummyToken");
+
       alert("Signup successful");
+
+      // ✅ redirect to dashboard
+      navigate("/dashboard");
 
     }catch(err){
       console.log(err);
