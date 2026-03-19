@@ -1,10 +1,11 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: "https://gen-ai-9gns.onrender.com/api", // ✅ fixed
   withCredentials: true
 });
 
+// 🔐 Auth APIs
 export const loginUser = (data) => {
   return API.post("/auth/login", data);
 };

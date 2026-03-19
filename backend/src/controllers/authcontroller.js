@@ -27,7 +27,11 @@ export async function register(req, res) {
   );
 
   // cookies send
-  res.cookie("token", token, { httpOnly: true });
+res.cookie("token", token, {
+  httpOnly: true,
+  secure: true,        // ✅ required for HTTPS
+  sameSite: "None"     // ✅ required for cross-origin
+});
   res.cookie("userId", newuser._id.toString());
   
 
@@ -38,7 +42,9 @@ export async function register(req, res) {
  } catch (error) {
     
 console.log(error.message);
-res.send(error.message);
+res.status(500).json({
+  message: error.message
+});
 
  }
 }
@@ -67,7 +73,11 @@ if (!hashpass) {
 
 const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
 
-res.cookie("token", token, { httpOnly: true });
+res.cookie("token", token, {
+  httpOnly: true,
+  secure: true,        // ✅ required for HTTPS
+  sameSite: "None"     // ✅ required for cross-origin
+});
 res.cookie("userId", user._id.toString());
 
 
