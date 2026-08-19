@@ -9,13 +9,13 @@ export default function Resume() {
 
   const navigate = useNavigate();
 
-  // 🔐 Logout
+  //  Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
 
-  // ⬅ Back
+  //  Back
   const handleBack = () => {
     navigate("/dashboard");
   };
@@ -30,7 +30,7 @@ export default function Resume() {
 
     try {
       const res = await axios.post(
-        "https://gen-ai-9gns.onrender.com/api/analyze-resume", // ✅ FIXED
+        "https://gen-ai-9gns.onrender.com/api/analyze-resume", 
         formData
       );
 

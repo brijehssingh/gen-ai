@@ -2,51 +2,73 @@ import userModel from "../models/userSchema.js";
 import bcrypt from "bcrypt";
 import jwt from  "jsonwebtoken"
 
+
 export async function register(req, res) {
+  try {
+    // Get data from frontend
+    const { name, email, password } = req.body;
 
- try {
-     const { name, email, password } = req.body;
+    // Check all fields
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
+    }
 
-  const user = await userModel.findOne({ email });
-  if (user) {
-    return res.status(409).json({ message: "This email already exists" });
+    // Check user already exists
+    const oldUser = await userModel.findOne({ email });
+
+    if (oldUser) {
+      return res.status(409).json({
+        message: "This email already exists",
+      });
+    }
+
+    // Convert password into hash
+    const hashedPassword = await bcrypt.hash(
+      password,
+      10
+    );
+
+    // Save user in MongoDB
+    const newUser = await userModel.create({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    // Create token
+    const token = jwt.sign(
+      { id: newUser._id },
+      process.env.SECRET_KEY,
+      { expiresIn: "7d" }
+    );
+
+    // Save token in cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
+
+    // Send response to frontend
+    return res.status(201).json({
+      message: "User created successfully",
+      token: token,
+
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+      },
+    });
+  } catch (error) {
+    console.log(error.message);
+
+    return res.status(500).json({
+      message: error.message,
+    });
   }
-
-  const hashedpassword = await bcrypt.hash(password, 10);
-
-  const newuser = await userModel.create({
-    name,
-    email,
-    password: hashedpassword
-  });
-
-  const token = jwt.sign(
-    { id: newuser._id },
-    process.env.SECRET_KEY
-    
-  );
-
-  // cookies send
-res.cookie("token", token, {
-  httpOnly: true,
-  secure: true,        // ✅ required for HTTPS
-  sameSite: "None"     // ✅ required for cross-origin
-});
-  res.cookie("userId", newuser._id.toString());
-  
-
-  res.status(201).json({
-    message: "User created",
-    user:newuser
-  });
- } catch (error) {
-    
-console.log(error.message);
-res.status(500).json({
-  message: error.message
-});
-
- }
 }
 
 export async function login(req,res) {

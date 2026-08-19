@@ -12,18 +12,18 @@ export default function Chat() {
   const bottomRef = useRef(null);
   const navigate = useNavigate();
 
-  // 🔥 Auto scroll
+  // Auto scroll
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
-  // 🔐 Logout
+  // Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
 
-  // ⬅ Back
+  // Back
   const handleBack = () => {
     navigate("/dashboard");
   };
@@ -40,7 +40,7 @@ export default function Chat() {
 
     try {
       const res = await axios.post(
-        "https://gen-ai-9gns.onrender.com/api/chat", // ✅ FIXED
+        "https://gen-ai-9gns.onrender.com/api/chat",
         {
           role,
           question: userMsg.text,

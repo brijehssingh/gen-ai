@@ -11,7 +11,7 @@ router.post("/chat", async (req, res) => {
 
   let systemPrompt = "";
 
-  // 🎯 Better prompts (improved response quality)
+ 
   if (role === "doctor") {
     systemPrompt = `
     You are a professional doctor.
